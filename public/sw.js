@@ -1,10 +1,10 @@
 const CACHE_NAME = 'tactics-heat-v1';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/src/main.js',
-  '/src/style.css',
-  '/assets/logowhite.png',
+  './',
+  './index.html',
+  './src/main.js',
+  './src/style.css',
+  './assets/logowhite.png',
   'https://unpkg.com/lucide@latest',
   'https://unpkg.com/konva@latest/konva.min.js'
 ];
