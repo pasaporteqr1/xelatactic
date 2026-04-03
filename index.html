@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- Viewport configured for web app / mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Pizarra Táctica Basquetbol</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0f111a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </head>
+  <body>
+    <!-- App Container -->
+    <div id="app">
+      <!-- Toolbar -->
+      <aside id="toolbar">
+        <div class="logo">
+          <h1>TACTICS<br>BOARD</h1>
+        </div>
+
+        <!-- Scenarios row -->
+        <div class="tool-section">
+          <h3>Escenario</h3>
+          <div class="scenario-picker">
+            <button class="scene-btn active" data-scene="M" title="Matriz">M</button>
+            <button class="scene-btn" data-scene="1" title="Escenario 1">1</button>
+            <button class="scene-btn" data-scene="2" title="Escenario 2">2</button>
+            <button class="scene-btn" data-scene="3" title="Escenario 3">3</button>
+          </div>
+        </div>
+
+        <!-- Mode row -->
+        <div class="tool-section">
+          <div class="tool-row">
+            <button class="tool-btn active" data-tool="select" title="Seleccionar y Mover">
+              <i data-lucide="mouse-pointer-2"></i>
+            </button>
+            <button class="tool-btn" data-tool="eraser" title="Borrar Elemento">
+              <i data-lucide="eraser"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Drawing tools row -->
+        <div class="tool-section">
+          <h3>Dibujo</h3>
+          <div class="tool-row">
+            <button class="tool-btn" data-tool="draw-solid" title="Línea Continua">
+              <i data-lucide="edit-2"></i>
+            </button>
+            <button class="tool-btn" data-tool="draw-dashed" title="Pase (Discontinua)">
+              <i data-lucide="minus"></i>
+            </button>
+          </div>
+          <div class="tool-row">
+            <button class="tool-btn" data-tool="draw-arrow" title="Movimiento (Flecha)">
+              <i data-lucide="arrow-up-right"></i>
+            </button>
+            <button class="tool-btn" data-tool="draw-screen" title="Bloqueo (T)">
+              <i data-lucide="baseline"></i>
+            </button>
+          </div>
+          <div class="tool-row">
+            <button class="tool-btn" data-tool="draw-x" title="Marcar (X)">
+              <i data-lucide="x"></i>
+            </button>
+            <button class="tool-btn" data-tool="draw-circle" title="Zona (Círculo)">
+              <i data-lucide="circle"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Color picker inline -->
+        <div class="tool-section">
+          <div class="color-picker">
+            <button class="color-btn active" data-color="#ffffff" title="Blanco" style="background:#ffffff;"></button>
+            <button class="color-btn" data-color="#ffe600" title="Amarillo" style="background:#ffe600;"></button>
+            <button class="color-btn" data-color="#39d353" title="Verde" style="background:#39d353;"></button>
+          </div>
+        </div>
+
+        <!-- Players row -->
+        <div class="tool-section">
+          <h3>Añadir</h3>
+          <div class="tool-row">
+            <button class="tool-btn btn-red" data-action="add-player-home" title="Jugador Rojo">R</button>
+            <button class="tool-btn btn-blue" data-action="add-player-away" title="Jugador Azul">A</button>
+          </div>
+          <div class="tool-row">
+            <button class="tool-btn btn-ball" data-action="add-ball" title="Balón">
+              <i data-lucide="circle-dot"></i>
+            </button>
+            <button class="tool-btn" data-action="bulk-add" title="Generar Equipo">
+              <i data-lucide="list-video"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom actions -->
+        <div class="tool-section bottom">
+          <div class="tool-row">
+            <button class="tool-btn" data-action="save-board" title="Guardar Pizarrón">
+              <i data-lucide="save"></i>
+            </button>
+            <button class="tool-btn" data-action="load-board" title="Cargar Pizarrón">
+              <i data-lucide="folder-open"></i>
+            </button>
+            <input type="file" id="board-file-input" accept=".json" style="display: none;">
+          </div>
+          <div class="tool-row">
+            <button class="tool-btn" data-action="undo" title="Deshacer">
+              <i data-lucide="undo"></i>
+            </button>
+            <button class="tool-btn" data-action="clear-drawings" title="Borrar Líneas">
+              <i data-lucide="eraser" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+          <button class="tool-btn btn-danger" data-action="clear-all" title="Reiniciar Todo">
+            <i data-lucide="refresh-ccw"></i>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Canvas Area -->
+      <main id="canvas-container"></main>
+
+      <div id="scenario-title-container">
+        <input type="text" id="scenario-title-input" value="MATRIZ" placeholder="Nombre del escenario..." maxlength="20">
+      </div>
+    </div>
+
+    <!-- Edit Player Modal -->
+    <div id="player-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <h2>Editar Jugador</h2>
+        <div class="form-group">
+          <label for="player-number">Número:</label>
+          <input type="text" id="player-number" maxlength="2" placeholder="Ej. 10">
+        </div>
+        <div class="form-group">
+          <label for="player-name">Nombre:</label>
+          <input type="text" id="player-name" maxlength="12" placeholder="Ej. Jordan">
+        </div>
+        <div class="modal-actions">
+          <button id="modal-cancel" class="btn-cancel">Cancelar</button>
+          <button id="modal-save" class="btn-save">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Add Modal -->
+    <div id="bulk-modal" class="modal-overlay hidden">
+      <div class="modal-content bulk-content">
+        <div class="bulk-header">
+          <h2>Generar Jugadores en Bloque</h2>
+          <button id="add-bulk-row" class="btn-icon" title="Añadir una fila vacía">
+            <i data-lucide="plus"></i>
+          </button>
+        </div>
+        <p class="bulk-hint">Los jugadores generados se añadirán al centro del tablero.</p>
+        <div class="bulk-table-container">
+          <table class="bulk-table">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Nombre</th>
+                <th>Equipo</th>
+                <th>Quitar</th>
+              </tr>
+            </thead>
+            <tbody id="bulk-tbody">
+              <!-- JS rows injected here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-actions">
+          <button id="bulk-cancel" class="btn-cancel">Cerrar</button>
+          <button id="bulk-generate" class="btn-save">Generar en Tablero</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

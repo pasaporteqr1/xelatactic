@@ -1,0 +1,24 @@
+{
+  "name": "Pizarra Táctica Heat",
+  "short_name": "Táctica Heat",
+  "description": "Pizarra táctica profesional para basquetbol - Xela Heat",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f111a",
+  "theme_color": "#0f111a",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/assets/logowhite.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
